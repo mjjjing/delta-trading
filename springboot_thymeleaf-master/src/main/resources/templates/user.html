@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="ThemeBucket">
+    <link rel="shortcut icon" href="#" type="image/png">
+    <title>用户管理 - 三角洲市场交易系统</title>
+    <div th:include="common :: commonheader"></div>
+</head>
+
+<body class="sticky-header">
+<section>
+    <div th:replace="common :: #leftmenu"></div>
+    <!-- main content start-->
+    <div class="main-content">
+        <!-- header section start-->
+        <div class="header-section">
+
+            <!--toggle button start-->
+            <a class="toggle-btn"><i class="fa fa-bars"></i></a>
+            <!--toggle button end-->
+
+            <!--search start-->
+            <!--            <form class="searchform" action="main.html" method="post">-->
+            <!--                <input type="text" class="form-control" name="keyword" placeholder="Search here..."/>-->
+            <!--            </form>-->
+            <!--search end-->
+
+            <!--notification menu start -->
+            <div class="menu-right">
+                <ul class="notification-menu">
+                    <li>
+                        <a href="#" class="btn btn-default dropdown-toggle">
+                            <img src="images/photos/user-avatar.png" alt="#"/>
+                            [[${session.user.UserName}]]
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+            <!--notification menu end -->
+
+        </div>
+        <!-- header section end-->
+        <!--body wrapper start-->
+        <!-- 用户表格 -->
+        <div class="wrapper">
+            <div class="row">
+                <div class="col-sm-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            用户列表
+                            <span class="tools pull-right">
+                                <a href="javascript:;" class="fa fa-chevron-down"></a>
+                             </span>
+                        </header>
+                        <div class="panel-body">
+                            <div class="adv-table editable-table ">
+                                <div class="clearfix" style="margin-bottom: 10px;">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-success" data-toggle="modal"
+                                                data-target="#addUserModal">添加新用户<i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="space15"></div>
+                                <table class="table table-striped table-hover table-bordered" id="userTable">
+                                    <thead>
+                                    <tr>
+                                        <th>账号</th>
+                                        <th>密码</th>
+                                        <th>性别</th>
+                                        <th>年龄</th>
+                                        <th>电话</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="user : ${users}">
+                                        <td th:text="${user.userName}">账号</td>
+                                        <td th:text="${user.password}">密码</td>
+                                        <td th:text="${user.sex}">性别</td>
+                                        <td th:text="${user.age}">年龄</td>
+                                        <td th:text="${user.phone}">电话</td>
+                                        <td>
+                                            <button type="button" class="btn btn-warning btn-xs edit-user"
+                                                    data-toggle="modal" data-target="#editUserModal"
+                                                    th:data-id="${user.id}" th:text="${'编辑'}"></button>
+                                            <button type="button" class="btn btn-danger btn-xs delete-user"
+                                                    data-toggle="modal" data-target="#deleteConfirmModal"
+                                                    th:data-id="${user.id}" th:text="${'删除'}"></button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- 新增用户模态框 -->
+                                <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <form id="addUserForm" th:action="@{/user/add}" method="post">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">添加新用户</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <!-- 表单字段 -->
+                                                    <div class="form-group">
+                                                        <label for="addUserName">账号</label>
+                                                        <input type="text" class="form-control" id="addUserName"
+                                                               name="userName" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="addPassword">密码</label>
+                                                        <input type="password" class="form-control" id="addPassword"
+                                                               name="password" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="addSex">性别</label>
+                                                        <select class="form-control" id="addSex" name="sex" required>
+                                                            <option value="M">男</option>
+                                                            <option value="F">女</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="addAge">年龄</label>
+                                                        <input type="number" class="form-control" id="addAge" name="age"
+                                                               required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="addPhone">电话</label>
+                                                        <input type="tel" class="form-control" id="addPhone"
+                                                               name="phone" required>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">关闭
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">添加</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 编辑用户模态框 -->
+                                <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <form id="editUserForm">
+                                                <input type="hidden" id="editUserId" name="id"> <!-- 隐藏ID字段用于表单提交 -->
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">编辑用户</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label for="editUserName">账号</label>
+                                                        <input type="text" class="form-control" id="editUserName"
+                                                               name="userName" required>
+                                                    </div>
+                                                    <div class="form-check mb-3">
+                                                        <input type="checkbox" class="form-check-input"
+                                                               id="changePasswordCheckbox">
+                                                        <label class="form-check-label" for="changePasswordCheckbox">更改密码</label>
+                                                    </div>
+                                                    <div class="form-group" id="passwordFields" style="display:none;">
+                                                        <label for="editPassword">新密码</label>
+                                                        <input type="password" class="form-control" id="editPassword"
+                                                               name="password">
+                                                        <label for="confirmEditPassword">确认新密码</label>
+                                                        <input type="password" class="form-control"
+                                                               id="confirmEditPassword" name="confirmPassword">
+                                                        <small id="passwordMatchError" class="form-text text-danger"
+                                                               style="display: none;">
+                                                            新密码和确认密码不匹配。
+                                                        </small>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="editSex">性别</label>
+                                                        <select class="form-control" id="editSex" name="sex" required>
+                                                            <option value="M">男</option>
+                                                            <option value="F">女</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="editAge">年龄</label>
+                                                        <input type="number" class="form-control" id="editAge"
+                                                               name="age" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="editPhone">电话</label>
+                                                        <input type="tel" class="form-control" id="editPhone"
+                                                               name="phone" required>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">关闭
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">保存更改</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 删除确认模态框 -->
+                                <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">确认删除</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                确定要删除此用户吗？
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    取消
+                                                </button>
+                                                <button type="button" class="btn btn-danger" id="confirmDelete">确定
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <!-- 成功提示模态框 -->
+            <div class="modal fade" id="successModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">操作成功</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p th:text="${session.successMessage}"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--body wrapper end-->
+        <!--footer section start-->
+        <footer>
+            2020 &copy; AdminEx by ThemeBucket </a>
+        </footer>
+        <!--footer section end-->
+    </div>
+    <!-- main content end-->
+</section>
+
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/jquery-ui-1.9.2.custom.min.js"></script>
+<script src="js/jquery-migrate-1.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/modernizr.min.js"></script>
+<script src="js/jquery.nicescroll.js"></script>
+
+<!--icheck -->
+<script src="js/iCheck/jquery.icheck.js"></script>
+<script src="js/icheck-init.js"></script>
+
+<!--common scripts for all pages-->
+<script src="js/scripts.js"></script>
+
+<!-- 为表格添加交互性 -->
+<script>
+    $(document).ready(function () {
+
+
+        // 处理新增用户表单提交
+        $('#addUserForm').on('submit', function (event) {
+            event.preventDefault(); // 阻止默认的表单提交行为
+
+            var formData = $(this).serialize(); // 序列化表单数据
+
+            $.ajax({
+                url: '/user/add',
+                method: 'POST',
+                data: formData,
+                success: function (response) {
+                    alert('用户已成功添加！');
+                    $('#addUserModal').modal('hide'); // 关闭模态框
+                    location.reload(); // 刷新页面以反映更改
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error adding user:', error);
+                    alert('添加用户失败，请重试。');
+                }
+            });
+        });
+
+
+        // 控制密码字段的显示与隐藏
+        $('#changePasswordCheckbox').on('change', function () {
+            var checked = $(this).is(':checked');
+            $('#passwordFields').toggle(checked);
+            if (!checked) {
+                // 清空密码字段
+                $('#editPassword').val('');
+                $('#confirmEditPassword').val('');
+                // 移除required属性，以便提交表单时不强制要求填写密码
+                $('#editPassword').prop('required', false);
+                $('#confirmEditPassword').prop('required', false);
+                $('#passwordMatchError').hide(); // 隐藏错误信息
+            } else {
+                // 添加required属性，确保用户必须填写新密码
+                $('#editPassword').prop('required', true);
+                $('#confirmEditPassword').prop('required', true);
+            }
+        });
+
+        // 检查新密码和确认密码是否一致
+        function checkPasswordMatch() {
+            var password = $('#editPassword').val();
+            var confirmPassword = $('#confirmEditPassword').val();
+            if (password !== confirmPassword) {
+                $('#passwordMatchError').show();
+                return false;
+            } else {
+                $('#passwordMatchError').hide();
+                return true;
+            }
+        }
+
+        // 处理编辑用户表单提交
+        $('#editUserForm').on('submit', function (event) {
+            event.preventDefault(); // 阻止默认的表单提交行为
+
+            var formData = $(this).serializeArray(); // 序列化表单数据为数组
+
+            // 如果没有勾选更改密码，则移除密码字段
+            if (!$('#changePasswordCheckbox').is(':checked')) {
+                formData = $.grep(formData, function (element) {
+                    return element.name !== 'password' && element.name !== 'confirmPassword';
+                });
+            }
+
+            // 将过滤后的数据转换回查询字符串
+            var serializedData = $.param(formData);
+
+            // 检查新密码和确认密码是否一致
+            if ($('#changePasswordCheckbox').is(':checked') && !checkPasswordMatch()) {
+                return; // 结束函数执行
+            }
+
+            $.ajax({
+                url: '/user/edit',
+                method: 'POST',
+                data: serializedData,
+                success: function (response) {
+                    alert('用户信息已成功更新！');
+                    $('#editUserModal').modal('hide'); // 关闭模态框
+                    location.reload(); // 刷新页面以反映更改
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error editing user:', error);
+                    alert('更新用户信息失败，请重试。');
+                }
+            });
+        });
+
+        // 编辑用户时预填充表单并设置ID
+        $(document).on('click', '.edit-user', function (event) {
+            event.preventDefault();
+            var userId = $(this).data('id');
+
+            // 使用AJAX获取用户详情并填充到编辑表单
+            $.ajax({
+                url: '/user/getById/' + userId,
+                method: 'GET',
+                success: function (user) {
+                    console.log('Received user data:', user); // 输出接收到的用户数据
+
+                    $('#editUserId').val(user.id);
+                    $('#editUserName').val(user.userName);
+                    $('#editPassword').val(''); // 或者根据需求决定是否填充密码
+                    $('#editSex').val(user.sex);
+                    $('#editAge').val(user.age);
+                    $('#editPhone').val(user.phone);
+
+                    // 确认表单字段是否已正确填充
+                    console.log('Form field values after setting:');
+                    console.log($('#editUserId').val());
+                    console.log($('#editUserName').val());
+                    console.log($('#editSex').val());
+                    console.log($('#editAge').val());
+                    console.log($('#editPhone').val());
+
+                    // 手动触发模态框显示
+                    $('#editUserModal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading user:', error);
+                    alert('加载用户信息失败，请重试。');
+                }
+            });
+        });
+
+
+        // 删除确认
+        $(document).on('click', '.delete-user', function (event) {
+            event.preventDefault();
+            var userId = $(this).data('id');
+            $('#confirmDelete').data('id', userId); // 存储ID以便确认后使用
+        });
+
+        // 确认删除
+        $('#confirmDelete').click(function () {
+            var userId = $(this).data('id');
+            $.ajax({
+                url: '/user/delete/' + userId,
+                method: 'POST', // 如果可能的话，最好改为 DELETE 方法
+                success: function () {
+                    alert('成功删除用户，ID: ' + userId);
+                    location.reload(); // 刷新页面以反映更改
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error deleting user:', error);
+                }
+            });
+            $('#deleteConfirmModal').modal('hide'); // 隐藏模态框
+        });
+
+    });
+</script>
+</body>
+</html>
